@@ -5,9 +5,8 @@ const
     TestsuiteAgent = require('./code/agent.testsuite.js'),
     TestsuiteApp   = require('./app.testsuite.js'),
     TestsuiteLab   = require('./lab.testsuite.js'),
-    initializeNet  = require(`./tc/ec/net/tc.ec.net.launch`),
-    initializeIDS  = require(`./tc/ec/ids/tc.ec.ids.launch`)
-; // const
+    initializeNet  = require('../ec/net/src/ts.ec.net.methods-factory.js'),
+    initializeIDS  = require('../ec/ids/src/ts.ec.ids.methods-factory.js');
 
 (async function LaunchTestsuite() {
 
@@ -47,16 +46,12 @@ const
     testsuiteAgent.testcases = {
         net: initializeNet({
             root_uri:    config.server.id,
-            agent:       {
-                test: testsuiteAgent.test.bind(testsuiteAgent)
-            },
+            agent:       testsuiteAgent,
             console_log: false
         }),
         ids: initializeIDS({
             root_uri:    config.server.id,
-            agent:       {
-                test: testsuiteAgent.test.bind(testsuiteAgent)
-            },
+            agent:       testsuiteAgent,
             console_log: false
         })
     };

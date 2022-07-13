@@ -14,6 +14,7 @@ class TestsuiteAgent extends ServerAgent {
     #tbSocket        = null;
     #tbEmit          = null;
     #testcases       = null;
+    #ecosystems      = Object.create(null);
 
     #connected      = false;
     #connectPromise = null;
@@ -75,6 +76,14 @@ class TestsuiteAgent extends ServerAgent {
 
     get id() {
         return this.uri;
+    }
+
+    get ecosystems() {
+        return this.#ecosystems;
+    }
+
+    get ec() {
+        return this.ecosystems;
     }
 
     get prefix() {

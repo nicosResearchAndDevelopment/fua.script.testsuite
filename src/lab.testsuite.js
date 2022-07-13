@@ -7,9 +7,6 @@ module.exports = async function TestsuiteLab(
     }
 ) {
 
-    // REM disable lab shield
-    if (true) return;
-
     agent.amec
         .on('authentication-error', (error) => {
             util.logError(error);
@@ -21,9 +18,14 @@ module.exports = async function TestsuiteLab(
             util.logError(error);
         });
 
-    if (!agent.testbed_connected)
-        await new Promise(resolve => agent.once('testbed_socket_connect', resolve));
+    // if (!agent.testbed_connected)
+    //     await new Promise(resolve => agent.once('testbed_socket_connect', resolve));
+    //
+    // await LAB_pingAliceBob(agent);
 
+}; // module.exports = TestsuiteLab
+
+async function LAB_pingAliceBob(agent) {
     let
         alice = "http://127.0.0.1:8099/",
         bob   = {
@@ -108,5 +110,4 @@ module.exports = async function TestsuiteLab(
         util.logError(error);
         debugger;
     } // try
-
-}; // module.exports = TestsuiteLab
+} // LAB_pingAliceBob
