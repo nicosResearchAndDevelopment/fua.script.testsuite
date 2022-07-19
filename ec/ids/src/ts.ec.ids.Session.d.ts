@@ -1,13 +1,32 @@
 declare interface CriterionObject {
     '@id': string; // only the id is mandatory, the rest is not defined
     [other: string]: unknown;
+
+    // The following properties come from the example file,
+    // but they are not used by the implementation:
+    timestamp: string;
+    prov: {
+        testFunction: string,
+        validationFunction: string
+    };
+    param: null;
+    result: null;
+    status: string,
+    history: []
 }
 
 declare interface SessionObject {
     sessionStart: string; // time of the constructor or read from loaded session
     sessionEnd: string; // time of the session end method
     timestamp: string; // time of the last criterion update
-    criteria: Array<CriterionObject>; // never updated
+    criteria: Array<CriterionObject>; // never updated be the session
+
+    // The following properties come from the example file,
+    // but they are not used by the implementation:
+    '@context': string,
+    applicant: string,
+    additional: [],
+    log: string
 }
 
 export default interface Session {
