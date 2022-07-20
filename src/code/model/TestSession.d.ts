@@ -1,12 +1,51 @@
-export default interface TestSession {
-    _state: { [key: string]: any }; // the current state of key-values
-    _history: Array<{ key: string, value: any, ts: number }>; // the history of overridden key-values
+import {KeyObject} from 'crypto';
+import {FileHandle} from 'fs/promises';
 
-    constructor(history?: Array<{ key: string, value: any, ts: number }>): TestSession;
+declare interface Parameter {
+    key: string;
+    value: string;
+}
 
-    set(key: string, value?: any): TestSession; // can set or remove a key from the state
-    get(key: string): any | null;
-    has(key: string): boolean;
+declare interface Statement {
+    created: string;
+    identifier: string;
+
+    contentType: string;
+    content: string;
+}
+
+declare interface PastStatement extends Statement {
+    replaced: string;
+}
+
+declare interface LogEntry {
+    timestamp: string;
+    type: string;
+    message: string;
+}
+
+export default class TestSession {
+    private file: null | FileHandle;
+    private tasks: Array<Promise<void>>;
+
+    private parameters: { [key: string]: Parameter }
+    private statements: { [key: string]: Statement };
+    private history: Array<PastStatement>;
+    private logs: Array<LogEntry>;
+
+    private load(): Promise<void>;
+    private save(): Promise<void>;
+
+    constructor(filename: string);
+    close(): Promise<void>;
+
+    parameter(key: string): Parameter | null;
+    statement(key: string, value: undefined | Statement | null): Statement | null;
+    log(entry: string | Error | LogEntry): void;
+
+    toJSON(): Object;
+    toTTL(): string;
+    toVC(signKey: string | Buffer | KeyObject): string;
 }
 
 // NOTE draft of requirements
