@@ -33,8 +33,8 @@ const
     //    host:     "127.0.0.1",
     //    port:     8080
     //}
-    // auditlog       = `C:/fua/DEVL/js/app/nrd-testbed/auditlog`,
-    auditlog       = path.join(__dirname, '../../../auditlog'),
+    auditlog       = `C:/fua/DEVL/js/app/nrd-testbed/auditlog`,
+    //auditlog       = path.join(__dirname, '../../../auditlog'),
     applicant_root = `${auditlog}/tb_ids_bob`,
     session_root   = `${applicant_root}/net`,
     applicant      = require(`${applicant_root}/config.json`)
@@ -63,7 +63,8 @@ function Session({
                     if (error)
                         node.error = error;
 
-                    fs.writeFileSync(`${root}/${testcase}_${leave}.json`, JSON.stringify(node, "", "\t"), /** options */ {});
+                    console.log(JSON.stringify(node, "", "\t"));
+                    //fs.writeFileSync(`${root}/${testcase}_${leave}.json`, JSON.stringify(node, "", "\t"), /** options */ {});
                 } catch (jex) {
                     throw (jex);
                 } // try
@@ -110,16 +111,16 @@ describe('net', function () {
         //session = null; // REM : mute output
 
         agent = await TestsuiteAgent.create({
-            id:      testsuite_id,
+            id:       testsuite_id,
             schema:   'https',
             hostname: 'testsuite.nicos-rd.com',
             port:     8081,
-            prefix:  'ts',
-            store:   config.space.datastore,
-            testbed: config.testbed
+            prefix:   'ts',
+            store:    config.space.datastore,
+            testbed:  config.testbed
         });
 
-        tc = require('../../src/tc/ec/net/tc.ec.net.launch.js')({
+        tc = require('../../back/src/tc/ec/net/tc.ec.net.launch.js')({
             //ec:          "net", // REM : "net" = default
             root_uri:    testsuite_id,
             root_urn:    "urn:ts:",
@@ -140,8 +141,7 @@ describe('net', function () {
         //
         //}); // before()
 
-        test(
-            `should successfully 'ping' applicant <${applicant.host}>`,
+        test(`should successfully 'ping' applicant <${applicant.host}>`,
             async () => await tc.ping(
                 agent.Token({
                     id:     undefined,
@@ -185,8 +185,7 @@ describe('net', function () {
             ////throw (new Error(``)); // REM : testing only
         });
 
-        test(
-            `TODO should successfully make 'portscan' at applicant <${applicant.host}`,
+        test(`TODO should successfully make 'portscan' at applicant <${applicant.host}`,
             () => tc.portscan(agent.Token({
                     id:     undefined,
                     start:  undefined,

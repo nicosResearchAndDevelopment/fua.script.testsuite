@@ -18,10 +18,12 @@ module.exports = async function TestsuiteLab(
             util.logError(error);
         });
 
-    // if (!agent.testbed_connected)
-    //     await new Promise(resolve => agent.once('testbed_socket_connect', resolve));
-    //
-    // await LAB_pingAliceBob(agent);
+    // ***********************************************************************************************
+     if (!agent.testbed_connected)
+         await new Promise(resolve => agent.once('testbed_socket_connect', resolve));
+
+     await LAB_pingAliceBob(agent);
+    // ***********************************************************************************************
 
 }; // module.exports = TestsuiteLab
 
