@@ -36,8 +36,8 @@ module.exports = function MethodsFactory(
     }
 ) {
     const
-        tc_root_uri = root_uri + 'ec/net/tc/',
-        tc_root_urn = root_urn + 'ec:net:tc:',
+        tc_root_uri = root_uri + 'ec/ids/tc/',
+        tc_root_urn = root_urn + 'ec:ids:tc:',
         criterion   = CriteriaFactory({
             root_uri: tc_root_uri + 'criterion/',
             root_urn: tc_root_urn + 'criterion:'

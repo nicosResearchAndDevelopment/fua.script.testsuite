@@ -106,7 +106,7 @@ async function LAB_pingAliceBob(agent) {
         );
 
         util.logObject(test_result);
-        debugger;
+        //debugger;
 
     } catch (error) {
         util.logError(error);

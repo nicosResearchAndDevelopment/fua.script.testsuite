@@ -136,6 +136,7 @@ class TestsuiteAgent extends ServerAgent {
         }
 
         data.testResult = testResult;
+        data.testError  = testError;
         return {token, data};
     } // TestsuiteAgent#test
 
