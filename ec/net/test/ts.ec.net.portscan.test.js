@@ -6,7 +6,7 @@ const
     TestsuiteAgent                  = require('../../../src/code/agent.testsuite.js'),
     initializeNet                   = require('../src/ts.ec.net.methods-factory.js');
 
-describe('ts.ec.net.ping', function () {
+describe('ts.ec.net.portscan', function () {
 
     this.timeout('10s');
 
@@ -33,18 +33,24 @@ describe('ts.ec.net.ping', function () {
 
     }); // before('initialize session')
 
-    test('should successfully ping the applicant', async function () {
+    test('should successfully make a portscan for the applicant', async function () {
 
         const testResult = await session.agent.enforce(
             session.agent.Token({
                 id:     undefined,
                 start:  undefined,
-                thread: `${util.utcDateTime()} : TS-MOCHA : test : ping : start`
+                thread: `${util.utcDateTime()} : TS-MOCHA : test : ping : portscan`
             }),
             {
-                testCase: 'urn:ts:ec:net:tc:ping',
+                testCase: 'urn:ts:ec:net:tc:portscan',
                 param:    {
-                    'host': session.applicant.host
+                    host:  session.applicant.host,
+                    ports: {
+                        needed: undefined, // REM: TC claims to need those
+                        //used:   undefined, // REM: applicant claims to use those
+                        bad: {tcp: [21]} // REM: TC claims those to be bad, validation-result on NOT_bad, PASS|FAIL|NOT_APPLICABLE
+                        //bad:    {tcp: []}
+                    }
                 },
                 operator: 'https://testbed.nicos-rd.com/domain/user#jlangkau'
             }
