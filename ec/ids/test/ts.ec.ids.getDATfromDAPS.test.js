@@ -8,7 +8,8 @@ const
 
 describe('ts.ec.ids.getDATfromDAPS', function () {
 
-    this.timeout('10s');
+    //this.timeout('10s');
+    this.timeout('60s');
 
     let session = Object.create(null);
 

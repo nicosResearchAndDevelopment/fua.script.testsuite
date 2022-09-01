@@ -125,18 +125,23 @@ class TestsuiteAgent extends ServerAgent {
 
         util.assert(this.#tbSocket, 'expected testbed socket to be defined');
         const
-            testToken               = {id: token.id, start: token.start, thread: []},
-            [testError, testResult] = await this.#tbEmit('test', testToken, data);
+            _testToken_             = {id: token.id, start: token.start, thread: []},
+            [testToken, testResult] = await this.#tbEmit('test', _testToken_, data);
+        //that = await this.#tbEmit('test', testToken, data);
 
-        if (util.isString(testError)) {
-            util.assert(testError === token.id, 'expected testError to be the token id');
-        } else if (util.isObject(testError)) {
-            util.assert(testError.id === token.id, 'expected testError id to be the token id');
-            if (util.isArray(testError.thread)) token.thread.concat(testError.thread);
+        if (util.isString(testToken)) {
+            util.assert(testToken === token.id, 'expected testToken to be the token id');
+        } else if (util.isObject(testToken)) {
+            util.assert(testToken.id === token.id, 'expected testToken id to be the token id');
+            if (util.isArray(testToken.thread)) token.thread.push(...testToken.thread);
         }
 
         data.testResult = testResult;
-        data.testError  = testError;
+        //data.testResult = {
+        //    'timestamp':         util.utcDateTime(),
+        //    'operationalResult': testResult
+        //};
+        data.testToken = testToken;
         return {token, data};
     } // TestsuiteAgent#test
 
