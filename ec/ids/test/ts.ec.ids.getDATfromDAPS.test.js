@@ -53,8 +53,8 @@ describe('ts.ec.ids.getDATfromDAPS', function () {
                 param:    {
                     rc:        "https://alice.nicos-rd.com:8099/",
                     daps:      "default",
-                    rc_daps:   {
-                        nbf: 12234234234
+                    tweak_dat:   {
+                        exp: 11234234234
                     },
                     verifyDAT: true
                 }
