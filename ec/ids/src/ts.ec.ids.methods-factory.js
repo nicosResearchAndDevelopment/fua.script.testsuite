@@ -3,7 +3,8 @@ const
     methodFactories = Object.freeze({
         INF_01:                        require('./tc/INF_01.js'),
         SUT_provides_self_description: require('./tc/SUT_provides_self_description.js'),
-        rc_refreshDAT:                 require('./rc/rc_refreshDAT.js')
+        rc_refreshDAT:                 require('./rc/rc_refreshDAT.js'),
+        rc_DAPS_nextDatRequest:        require('./rc/rc_DAPS_nextDatRequest.js')
     });
 
 function createExternalMethod({methodFactory, ...factoryArgs}) {
@@ -55,6 +56,11 @@ module.exports = function MethodsFactory(
 
     methods.rc_refreshDAT = createExternalMethod({
         methodFactory: methodFactories.rc_refreshDAT,
+        tc_root_uri, tc_root_urn, criterion, ...factoryArgs
+    });
+
+    methods.rc_DAPS_nextDatRequest = createExternalMethod({
+        methodFactory: methodFactories.rc_DAPS_nextDatRequest,
         tc_root_uri, tc_root_urn, criterion, ...factoryArgs
     });
 

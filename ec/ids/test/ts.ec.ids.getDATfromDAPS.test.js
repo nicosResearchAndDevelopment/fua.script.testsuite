@@ -53,7 +53,7 @@ describe('ts.ec.ids.getDATfromDAPS', function () {
                 param:    {
                     rc:        "https://alice.nicos-rd.com:8099/",
                     daps:      "default",
-                    tweak_dat:   {
+                    tweak_dat: {
                         exp: 11234234234
                     },
                     verifyDAT: true
@@ -73,5 +73,40 @@ describe('ts.ec.ids.getDATfromDAPS', function () {
         });
 
     }); // test('should refresh RC's DAT')
+
+    test('should set DAPS to next DAT-request', async function () {
+
+        const testResult = await session.agent.enforce(
+            session.agent.Token({
+                id:     undefined,
+                start:  undefined,
+                thread: `${util.utcDateTime()} : TS-MOCHA : test : DAPS_nextDatRequest : start`
+            }),
+            /* data */ { // REM : CUT refreshes DAT
+
+                //ec:       "ids",
+                ////command:  "rc_refreshDAT",
+                //command:  "refreshDAT",
+
+                testCase: 'urn:ts:ec:ids:tc:rc_DAPS_nextDatRequest',
+                operator: 'https://testbed.nicos-rd.com/domain/user#jlangkau',
+                param:    {
+                    daps: "default",
+                    next: {
+                        address:   "next", // REM: next OR CUT-ip
+                        once:      true,
+                        tweak_dat: {
+                            exp: 11234234234
+                        }
+                    }
+                }
+            }
+        );
+
+        expect(testResult.data.validationResult).toMatchObject({
+            value: 'PASS'
+        });
+
+    }); // test('should set DAPS to next DAT-reqeust')
 
 }); // describe('ts.ec.net.ping')
