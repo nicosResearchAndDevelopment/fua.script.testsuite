@@ -52,7 +52,8 @@ describe('ts.ec.ids.getDATfromDAPS', function () {
                 operator: 'https://testbed.nicos-rd.com/domain/user#jlangkau',
                 param:    {
                     rc:        "https://alice.nicos-rd.com:8099/",
-                    daps:      "default",
+                    //daps:      "default",
+                    daps:      "tb_daps",
                     tweak_dat: {
                         exp: 11234234234
                     },
