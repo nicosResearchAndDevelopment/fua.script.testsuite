@@ -1,0 +1,9 @@
+{
+  "@type": "TestSession",
+  "@id": "dbb27d60-5abd-11ed-a211-050004416f41",
+  "dct:created": "2022-11-02T14:51:39.958Z",
+  "properties": {
+    "applicant": "example.org",
+    "host": "127.0.0.1"
+  }
+}

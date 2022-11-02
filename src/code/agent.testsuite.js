@@ -145,6 +145,10 @@ class TestsuiteAgent extends ServerAgent {
         return {token, data};
     } // TestsuiteAgent#test
 
+    async processToken (token) {
+
+    } // TestsuiteAgent#processToken
+
     async enforce(token, data) {
         this.#connected || await this.#connectPromise;
 

@@ -1,6 +1,7 @@
 const
     {describe, test, before, after} = require('mocha'),
     expect                          = require('expect'),
+    testing                         = require('@nrd/fua.module.testing'),
     util                            = require('../src/ts.ec.net.util.js'),
     config                          = require('../../../src/config/config.testsuite.js'),
     TestsuiteAgent                  = require('../../../src/code/agent.testsuite.js'),
@@ -31,9 +32,41 @@ describe('ts.ec.net.ping', function () {
             })
         };
 
+        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        await testing.init({
+            load:   [__dirname, '../../../session/session.json'],
+            select: {
+                //suite:    this.test.parent.titlePath().join('.'),
+                date:     util.localDate(),
+                operator: 'test@nicos-ag.com'
+            }
+        });
+
+        expect(testing.property('applicant')).toBe('example.org');
+
     }); // before('initialize session')
 
+    after('exit', async function () {
+        await testing.exit();
+
+        //await util.pause('1s');
+        //expect(() => testing.token()).toThrow();
+        //expect(() => testing.property('applicant')).toThrow();
+
+    }); // after
+
     test('should successfully ping the applicant', async function () {
+
+        const token = testing.token({
+            //test:      this.test.titlePath().join('.'),
+            //applicant: testing.property('applicant'),
+            testCase: 'urn:ts:ec:net:tc:ping',
+            param:    {
+                'host': testing.property('host')
+            },
+            validation: {}
+        });
+        token.log("DAS IST EIN TEST!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         const testResult = await session.agent.enforce(
             session.agent.Token({
@@ -50,6 +83,9 @@ describe('ts.ec.net.ping', function () {
             }
         );
 
+        expect(testResult.error).toMatchObject({
+            value: 'PASS'
+        });
         expect(testResult.data.validationResult).toMatchObject({
             value: 'PASS'
         });

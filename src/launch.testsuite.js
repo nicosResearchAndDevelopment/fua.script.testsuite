@@ -24,6 +24,7 @@ const
         amec:     true,
         server:   config.server.options,
         app:      true,
+        event:    true,
         io:       true,
         domain:   true,
         sessions: {
