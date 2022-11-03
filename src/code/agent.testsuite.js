@@ -2,6 +2,7 @@ const
     path             = require('path'),
     util             = require('./util.testsuite.js'),
     ServerAgent      = require('@nrd/fua.agent.server'),
+    testing_model    = require('@nrd/fua.module.testing/model'),
     socket_io_client = require('socket.io-client');
 
 class TestsuiteAgent extends ServerAgent {
@@ -70,6 +71,9 @@ class TestsuiteAgent extends ServerAgent {
                 reject(err);
             });
         });
+
+        if (this.event && this.#tbSocket)
+            this.event.connectIOSocket(this.#tbSocket, 'fua.module.testing.TestToken.**');
 
         return this;
     } // TestsuiteAgent#initialize
@@ -145,9 +149,22 @@ class TestsuiteAgent extends ServerAgent {
         return {token, data};
     } // TestsuiteAgent#test
 
-    async processToken (token) {
+    async launchTestCase(token) {
+        this.#connected || await this.#connectPromise;
 
-    } // TestsuiteAgent#processToken
+        util.assert(this.#tbSocket, 'expected testbed socket to be defined');
+        util.assert(this.#testcases, 'expected testcases to be defined');
+        util.assert(this.event, 'expected an event agent to be defined');
+
+        util.assert(token instanceof testing_model.TestToken, 'expected token to be a TestToken');
+        util.assert(util.isString(token.data.testCase), 'expected token.data.testCase to be a string');
+
+        const tcFunction = this.#testcases[token.data.testCase];
+        util.assert(tcFunction, `testcase "${token.data.testCase}" function not found`);
+
+        token.connect(this.event);
+        await tcFunction(token);
+    } // TestsuiteAgent#launchTestCase
 
     async enforce(token, data) {
         this.#connected || await this.#connectPromise;
