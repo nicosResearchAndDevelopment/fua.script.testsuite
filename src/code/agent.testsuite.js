@@ -149,6 +149,10 @@ class TestsuiteAgent extends ServerAgent {
         return {token, data};
     } // TestsuiteAgent#test
 
+    /**
+     * @param {fua.module.testing.TestToken} token
+     * @returns {Promise<void>}
+     */
     async launchTestCase(token) {
         this.#connected || await this.#connectPromise;
 
@@ -162,8 +166,16 @@ class TestsuiteAgent extends ServerAgent {
         const tcFunction = this.#testcases[token.data.testCase];
         util.assert(tcFunction, `testcase "${token.data.testCase}" function not found`);
 
-        token.connect(this.event);
-        await tcFunction(token);
+        try {
+            token.connect(this.event);
+            await tcFunction(token);
+            util.assert(util.isObject(token.data.validation), 'expected token.data.validation to be an object');
+            token.assign({validation: {success: true}});
+        } catch (err) {
+            token.log(err);
+            token.assign({validation: {success: false}});
+            throw err;
+        }
     } // TestsuiteAgent#launchTestCase
 
     async enforce(token, data) {
