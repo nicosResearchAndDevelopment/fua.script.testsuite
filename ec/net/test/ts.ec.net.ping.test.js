@@ -21,7 +21,8 @@ describe('ts.ec.net.ping', function () {
             context: config.space.context,
             store:   config.space.datastore,
             prefix:  'ts',
-            testbed: config.testbed
+            testbed: config.testbed,
+            event:   true
         });
 
         session.agent.testcases = {
@@ -32,7 +33,6 @@ describe('ts.ec.net.ping', function () {
             })
         };
 
-        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         await testing.init({
             load:   [__dirname, '../../../session/session.json'],
             select: {
@@ -48,11 +48,6 @@ describe('ts.ec.net.ping', function () {
 
     after('exit', async function () {
         await testing.exit();
-
-        //await util.pause('1s');
-        //expect(() => testing.token()).toThrow();
-        //expect(() => testing.property('applicant')).toThrow();
-
     }); // after
 
     test('should successfully ping the applicant', async function () {
@@ -63,31 +58,16 @@ describe('ts.ec.net.ping', function () {
             testCase: 'urn:ts:ec:net:tc:ping',
             param:    {
                 'host': testing.property('host')
-            },
-            validation: {}
-        });
-        token.log("DAS IST EIN TEST!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-        const testResult = await session.agent.enforce(
-            session.agent.Token({
-                id:     undefined,
-                start:  undefined,
-                thread: `${util.utcDateTime()} : TS-MOCHA : test : ping : start`
-            }),
-            {
-                testCase: 'urn:ts:ec:net:tc:ping',
-                param:    {
-                    'host': session.applicant.host
-                },
-                operator: 'https://testbed.nicos-rd.com/domain/user#jlangkau'
             }
-        );
-
-        expect(testResult.error).toMatchObject({
-            value: 'PASS'
         });
-        expect(testResult.data.validationResult).toMatchObject({
-            value: 'PASS'
+        token.log("N DAS IST EIN TEST!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        await session.agent.launchTestCase(token);
+
+        expect(token.data).toMatchObject({
+            validation: {
+                success: true
+            }
         });
 
     }); // test('should successfully ping the applicant')

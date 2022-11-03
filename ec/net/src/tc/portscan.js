@@ -20,135 +20,275 @@ module.exports = function MethodFactory_portscan(
         ErrorBadPort             = util.createErrorBadPort({urn, uri}),
         ErrorPortsNeededNotFound = util.createErrorPortsNeededNotFound({urn, uri});
 
-    async function portscan(token, data) {
-        const result = {token, data, error: null};
+    async function portscan(token) {
 
-        try {
-            token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : called`);
+        //const result = {token, data, error: null};
 
-            data.ec      = ec;
-            data.command = NAME;
+        //try {
+        token.log(`TESTSUITE : ${urn} : called`);
 
-            await agent.test(token, data);
+        token.data.ec      = ec;
+        token.data.command = NAME;
 
-            token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : before : validation`);
+        await token.sync();
 
-            if (!data.testResult) throw new ErrorTestResultIsMissing();
+        token.log(`TESTSUITE : ${urn} : before : validation`);
 
-            data.validationResult = {
-                id:        `${uri}portscan/validation/result/${util.uuid.v1()}`,
+        if (!token.data.testResult) throw new ErrorTestResultIsMissing();
+
+        // region validation
+
+        token.data.validation = {
+            result: {
                 timestamp: util.utcDateTime(),
-                //testCase:              urn,
-                //testCriterion:         undefined,
-                //testCaseSpecification: undefined,
-                ports: {},
-                //value:                 util.PASS // REM: sub-failings will set to 'util.FAIL',
-                criterion: {}
-            };
+                ports:     {}
+            }
+        };
 
-            // TODO rework the following code for a more streamlined structure
+        //data.validationResult = {
+        //    id:        `${uri}portscan/validation/result/${util.uuid.v1()}`,
+        //    timestamp: util.utcDateTime(),
+        //    //testCase:              urn,
+        //    //testCriterion:         undefined,
+        //    //testCaseSpecification: undefined,
+        //    ports: {},
+        //    //value:                 util.PASS // REM: sub-failings will set to 'util.FAIL',
+        //    criterion: {}
+        //};
 
-            let
-                status = util.PASS,
-                error  = null;
+        // TODO: rework the following code for a more streamlined structure
 
-            if (data.param.ports.needed) {
-                token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : validation : ports : needed`);
-                const ports_found     = [];
-                const ports_NOT_found = [];
-                for (const [protocol, ports] of Object.entries(data.param.ports.needed)) {
-                    ports.forEach((p) => {
-                        if (data.testResult.operationalResult[protocol][p]) {
-                            let node = {
-                                protocol: protocol,
-                                port:     p
-                            };
-                            if (data.testResult.operationalResult[protocol][p].service)
-                                node.service = data.testResult.operationalResult[protocol][p].service;
-                            if (data.testResult.operationalResult[protocol][p].state)
-                                node.state = data.testResult.operationalResult[protocol][p].state;
-                            ports_found.push(node);
-                        } else {
-                            ports_NOT_found.push(p);
-                        } // if ()
-                    });
-                } // for ([protocol, ports])
+        let
+            status = util.PASS,
+            error  = null;
+        //
+        if (token.data.param.ports.needed) {
 
-                if (ports_NOT_found.length > 0) {
-                    data.validationResult.ports.needed = {
-                        status: util.FAIL
-                    };
-                    status                             = util.FAIL;
-                    error                              = new ErrorPortsNeededNotFound(JSON.stringify(ports_NOT_found));
-                } else {
-                    data.validationResult.ports.needed = {
-                        status: util.PASS
-                    };
-                } // if ()
+            token.log(`TESTSUITE : ${urn} : validation : ports : needed`);
 
+            const ports_found     = [];
+            const ports_NOT_found = [];
+            for (const [protocol, ports] of Object.entries(token.data.param.ports.needed)) {
+                ports.forEach((p) => {
+                    if (token.data.testResult.operationalResult[protocol][p]) {
+                        let node = {
+                            protocol: protocol,
+                            port:     p
+                        };
+                        if (token.data.testResult.operationalResult[protocol][p].service)
+                            node.service = token.data.testResult.operationalResult[protocol][p].service;
+                        if (token.data.testResult.operationalResult[protocol][p].state)
+                            node.state = token.data.testResult.operationalResult[protocol][p].state;
+                        ports_found.push(node);
+                    } else {
+                        ports_NOT_found.push(p);
+                    } // if ()
+                });
+            } // for ([protocol, ports])
+
+            if (ports_found.length < token.data.param.ports.needed.length) {
+                token.data.validation.result.ports.found     = ports_found;
+                token.data.validation.result.ports.not_found = ports_NOT_found;
+                token.state('ec/net/PORTS_NEEDED', false);
             } else {
-                data.validationResult.ports.needed = {
-                    value: util.NOT_APPLICABLE
-                };
-            } // if (data.param.ports.needed)
+                token.data.validation.result.ports.found = ports_found;
+                token.state('ec/net/PORTS_NEEDED', true);
+            } // if ()
 
-            if (!error && data.param.ports.bad) {
-                token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : validation : ports : NOT_bad`);
-                const ports_found = [];
-                for (const [protocol, ports] of Object.entries(data.param.ports.bad)) {
-                    ports.forEach((p) => {
-                        if (data.testResult.operationalResult[protocol][p]) {
-                            let node = {
-                                protocol: protocol,
-                                port:     p
-                            };
-                            if (data.testResult.operationalResult[protocol][p].service)
-                                node.service = data.testResult.operationalResult[protocol][p].service;
-                            if (data.testResult.operationalResult[protocol][p].state)
-                                node.state = data.testResult.operationalResult[protocol][p].state;
-                            ports_found.push(node);
-                        } // if ()
-                    });
-                } // for ([protocol, ports])
+            //} else {
+            //    data.validationResult.ports.needed = {
+            //        value: util.NOT_APPLICABLE
+            //    };
 
-                if (ports_found.length > 0) {
-                    data.validationResult.ports.NOT_bad = {
-                        status: util.FAIL
-                    };
-                    status                              = util.FAIL;
-                    error                               = new ErrorBadPort(JSON.stringify(ports_found));
-                } else {
-                    data.validationResult.ports.NOT_bad = {
-                        status: util.PASS
-                    };
-                } // if ()
+        } // if (data.param.ports.needed)
 
+        if (!error && token.data.param.ports.bad) {
+            token.log(`TESTSUITE : ${urn} : validation : ports : NOT_bad`);
+
+            const ports_found = [];
+            for (const [protocol, ports] of Object.entries(token.data.param.ports.bad)) {
+                ports.forEach((p) => {
+                    if (token.data.testResult.operationalResult[protocol][p]) {
+                        let node = {
+                            protocol: protocol,
+                            port:     p
+                        };
+                        if (token.data.testResult.operationalResult[protocol][p].service)
+                            node.service = token.data.testResult.operationalResult[protocol][p].service;
+                        if (token.data.testResult.operationalResult[protocol][p].state)
+                            node.state = token.data.testResult.operationalResult[protocol][p].state;
+                        ports_found.push(node);
+                    } // if ()
+                });
+            } // for ([protocol, ports])
+
+            if (ports_found.length > 0) {
+                token.data.validation.result.ports.bad_found = ports_found;
+                token.state('ec/net/NO_BAD_PORT', false);
             } else {
-                data.validationResult.ports.NOT_bad = {
-                    status: util.NOT_APPLICABLE
-                };
-                status                              = util.FAIL;
-            } // if (data.param.ports.bad)
+                token.state('ec/net/NO_BAD_PORT', true);
+            } // if ()
 
-            data.validationResult.criterion.PORTS_CORRECT = criterion.PORTS_CORRECT({
-                id:          `${uri}validation/criterion/PORTS_CORRECT/${util.uuid.v1()}`,
-                prov:        portscan.id,
-                testCase:    testCase,
-                description: 'SUT answers on portscan',
-                status:      status,
-                timestamp:   util.utcDateTime()
-            });
+            //} else {
+            //    data.validationResult.ports.NOT_bad = {
+            //        status: util.NOT_APPLICABLE
+            //    };
+            //    status                              = util.FAIL;
+        } // if (data.param.ports.bad)
 
-        } catch (err) {
-            result.error = err;
-            util.logError(err);
-        } // try
+        //data.validationResult.criterion.PORTS_CORRECT = criterion.PORTS_CORRECT({
+        //    id:          `${uri}validation/criterion/PORTS_CORRECT/${util.uuid.v1()}`,
+        //    prov:        portscan.id,
+        //    testCase:    testCase,
+        //    description: 'SUT answers on portscan',
+        //    status:      status,
+        //    timestamp:   util.utcDateTime()
+        //});
 
-        if (console_log) util.logObject(result);
+        // endregion validation
 
-        token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : before : return`);
-        return result;
+        //} catch (err) {
+        //    result.error = err;
+        //    util.logError(err);
+        //} // try
+
+        token.data.testResult.operationalResult = undefined;
+
+        token.state('ec/net/PORTS_CORRECT', true);
+
+        return {error: null};
+
     } // portscan
+
+    //async function portscan(token, data) {
+    //    const result = {token, data, error: null};
+    //
+    //    try {
+    //        token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : called`);
+    //
+    //        data.ec      = ec;
+    //        data.command = NAME;
+    //
+    //        await agent.test(token, data);
+    //
+    //        token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : before : validation`);
+    //
+    //        if (!data.testResult) throw new ErrorTestResultIsMissing();
+    //
+    //        data.validationResult = {
+    //            id:        `${uri}portscan/validation/result/${util.uuid.v1()}`,
+    //            timestamp: util.utcDateTime(),
+    //            //testCase:              urn,
+    //            //testCriterion:         undefined,
+    //            //testCaseSpecification: undefined,
+    //            ports: {},
+    //            //value:                 util.PASS // REM: sub-failings will set to 'util.FAIL',
+    //            criterion: {}
+    //        };
+    //
+    //        // TODO rework the following code for a more streamlined structure
+    //
+    //        let
+    //            status = util.PASS,
+    //            error  = null;
+    //
+    //        if (data.param.ports.needed) {
+    //            token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : validation : ports : needed`);
+    //            const ports_found     = [];
+    //            const ports_NOT_found = [];
+    //            for (const [protocol, ports] of Object.entries(data.param.ports.needed)) {
+    //                ports.forEach((p) => {
+    //                    if (data.testResult.operationalResult[protocol][p]) {
+    //                        let node = {
+    //                            protocol: protocol,
+    //                            port:     p
+    //                        };
+    //                        if (data.testResult.operationalResult[protocol][p].service)
+    //                            node.service = data.testResult.operationalResult[protocol][p].service;
+    //                        if (data.testResult.operationalResult[protocol][p].state)
+    //                            node.state = data.testResult.operationalResult[protocol][p].state;
+    //                        ports_found.push(node);
+    //                    } else {
+    //                        ports_NOT_found.push(p);
+    //                    } // if ()
+    //                });
+    //            } // for ([protocol, ports])
+    //
+    //            if (ports_NOT_found.length > 0) {
+    //                data.validationResult.ports.needed = {
+    //                    status: util.FAIL
+    //                };
+    //                status                             = util.FAIL;
+    //                error                              = new ErrorPortsNeededNotFound(JSON.stringify(ports_NOT_found));
+    //            } else {
+    //                data.validationResult.ports.needed = {
+    //                    status: util.PASS
+    //                };
+    //            } // if ()
+    //
+    //        } else {
+    //            data.validationResult.ports.needed = {
+    //                value: util.NOT_APPLICABLE
+    //            };
+    //        } // if (data.param.ports.needed)
+    //
+    //        if (!error && data.param.ports.bad) {
+    //            token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : validation : ports : NOT_bad`);
+    //            const ports_found = [];
+    //            for (const [protocol, ports] of Object.entries(data.param.ports.bad)) {
+    //                ports.forEach((p) => {
+    //                    if (data.testResult.operationalResult[protocol][p]) {
+    //                        let node = {
+    //                            protocol: protocol,
+    //                            port:     p
+    //                        };
+    //                        if (data.testResult.operationalResult[protocol][p].service)
+    //                            node.service = data.testResult.operationalResult[protocol][p].service;
+    //                        if (data.testResult.operationalResult[protocol][p].state)
+    //                            node.state = data.testResult.operationalResult[protocol][p].state;
+    //                        ports_found.push(node);
+    //                    } // if ()
+    //                });
+    //            } // for ([protocol, ports])
+    //
+    //            if (ports_found.length > 0) {
+    //                data.validationResult.ports.NOT_bad = {
+    //                    status: util.FAIL
+    //                };
+    //                status                              = util.FAIL;
+    //                error                               = new ErrorBadPort(JSON.stringify(ports_found));
+    //            } else {
+    //                data.validationResult.ports.NOT_bad = {
+    //                    status: util.PASS
+    //                };
+    //            } // if ()
+    //
+    //        } else {
+    //            data.validationResult.ports.NOT_bad = {
+    //                status: util.NOT_APPLICABLE
+    //            };
+    //            status                              = util.FAIL;
+    //        } // if (data.param.ports.bad)
+    //
+    //        data.validationResult.criterion.PORTS_CORRECT = criterion.PORTS_CORRECT({
+    //            id:          `${uri}validation/criterion/PORTS_CORRECT/${util.uuid.v1()}`,
+    //            prov:        portscan.id,
+    //            testCase:    testCase,
+    //            description: 'SUT answers on portscan',
+    //            status:      status,
+    //            timestamp:   util.utcDateTime()
+    //        });
+    //
+    //    } catch (err) {
+    //        result.error = err;
+    //        util.logError(err);
+    //    } // try
+    //
+    //    if (console_log) util.logObject(result);
+    //
+    //    token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : before : return`);
+    //    return result;
+    //} // portscan
 
     Object.defineProperties(portscan, {
         id:   {value: uri, enumerable: true},
