@@ -98,10 +98,6 @@ class TestsuiteAgent extends ServerAgent {
         return this.#tbSocket && this.#tbSocket.connected;
     }
 
-    get testcases() {
-        return this.#testcases;
-    }
-
     addTestCase(ecName, fnName, tcFunction) {
         util.assert(util.isString(ecName), 'expected ecName to be a string');
         util.assert(util.isString(fnName), 'expected fnName to be a string');
