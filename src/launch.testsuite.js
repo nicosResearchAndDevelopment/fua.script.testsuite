@@ -5,8 +5,8 @@ const
     TestsuiteAgent = require('./code/agent.testsuite.js'),
     TestsuiteApp   = require('./app.testsuite.js'),
     TestsuiteLab   = require('./lab.testsuite.js'),
-    initializeNet  = require('../ec/net/src/ts.ec.net.methods-factory.js'),
-    initializeIDS  = require('../ec/ids/src/ts.ec.ids.methods-factory.js');
+    initializeNet  = require('../ec/net/src/initialize.net.js'),
+    initializeIDS  = require('../ec/ids/src/initialize.ids.js');
 
 (async function LaunchTestsuite() {
 
@@ -44,18 +44,14 @@ const
 
     /* 3. Wait for all ecosystems to initialize: */
 
-    testsuiteAgent.testcases = {
-        net: initializeNet({
-            root_uri:    config.server.id,
-            agent:       testsuiteAgent,
-            console_log: false
-        }),
-        ids: initializeIDS({
-            root_uri:    config.server.id,
-            agent:       testsuiteAgent,
-            console_log: false
-        })
-    };
+    util.logText('initializing ecosystems');
+
+    await Promise.all([
+        initializeNet({'agent': testsuiteAgent}),
+        initializeIDS({'agent': testsuiteAgent})
+    ]);
+
+    util.logText('ecosystems initialized (' + Object.keys(testsuiteAgent.ecosystems).join(', ') + ')');
 
     /* 4. Launch the main app: */
 

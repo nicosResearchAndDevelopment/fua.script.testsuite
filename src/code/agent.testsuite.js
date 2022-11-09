@@ -14,7 +14,7 @@ class TestsuiteAgent extends ServerAgent {
     #tbSocketOptions = null;
     #tbSocket        = null;
     #tbEmit          = null;
-    #testcases       = null;
+    #testcases       = Object.create(null);
     #ecosystems      = Object.create(null);
 
     #connected      = false;
@@ -102,26 +102,35 @@ class TestsuiteAgent extends ServerAgent {
         return this.#testcases;
     }
 
-    set testcases(testcases) {
-        util.assert(!this.#testcases, 'testcases are already defined');
-        util.assert(util.isObject(testcases), 'expected testcases to be an object');
-        const _testcases = Object.create(null);
-        for (let [ecName, ecosystem] of Object.entries(testcases)) {
-            for (let [fnName, tcFunction] of Object.entries(ecosystem)) {
-                const fnPath = `${ecName}/${fnName}`;
-                util.assert(!(fnPath in _testcases), 'expected function path to be unique');
-                _testcases[fnPath] = tcFunction;
-                if (tcFunction.id && _testcases[tcFunction.id] !== tcFunction) {
-                    util.assert(!(tcFunction.id in _testcases), 'expected function id to be unique');
-                    _testcases[tcFunction.id] = tcFunction;
-                }
-                if (tcFunction.urn && _testcases[tcFunction.urn] !== tcFunction) {
-                    util.assert(!(tcFunction.urn in _testcases), 'expected function urn to be unique');
-                    _testcases[tcFunction.urn] = tcFunction;
-                }
-            }
+    addTestCase(ecName, fnName, tcFunction) {
+        util.assert(util.isString(ecName), 'expected ecName to be a string');
+        util.assert(util.isString(fnName), 'expected fnName to be a string');
+        util.assert(util.isFunction(tcFunction), 'expected tcFunction to be a function');
+
+        const tcName = `${ecName}/${fnName}`;
+        util.assert(ecName in this.#ecosystems, 'unknown ecosystem: ' + ecName);
+        util.assert(!(tcName in this.#testcases), 'not unique testcase: ' + tcName);
+        this.#testcases[tcName] = tcFunction;
+
+        if (tcFunction.id) {
+            // NOTE the id is generated bases on the testsuite uri, which is not ideal
+            // TODO find a consistent and reliable pattern for loading testcases
+            util.assert(!(tcFunction.id in this.#testcases), 'not unique testcase id: ' + tcFunction.id);
+            this.#testcases[tcFunction.id] = tcFunction;
         }
-        this.#testcases = _testcases;
+
+        if (tcFunction.urn) {
+            util.assert(!(tcFunction.urn in this.#testcases), 'not unique testcase urn: ' + tcFunction.urn);
+            this.#testcases[tcFunction.urn] = tcFunction;
+        }
+    }
+
+    addTestCases(ecName, ecTestCases) {
+        util.assert(util.isString(ecName), 'expected ecName to be a string');
+        util.assert(util.isObject(ecTestCases), 'expected ecTestCases to be an object');
+        for (let [fnName, tcFunction] of Object.entries(ecTestCases)) {
+            this.addTestCase(ecName, fnName, tcFunction);
+        }
     }
 
     async test(token, data) {
