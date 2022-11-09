@@ -5,19 +5,17 @@ const
     util                            = require('../src/ts.ec.net.util.js'),
     config                          = require('../../../src/config/config.testsuite.js'),
     TestsuiteAgent                  = require('../../../src/code/agent.testsuite.js'),
-    initializeNet                   = require('../src/ts.ec.net.methods-factory.js');
+    initializeNet                   = require('../src/initialize.net.js');
 
 describe('ts.ec.net.ping', function () {
 
     this.timeout('10s');
 
-    let session = Object.create(null);
+    let agent = null;
 
     before('initialize session', async function () {
 
-        session.applicant = require('../../../session/ids/tb_ids_bob/config.json');
-
-        session.agent = await TestsuiteAgent.create({
+        agent = await TestsuiteAgent.create({
             context: config.space.context,
             store:   config.space.datastore,
             prefix:  'ts',
@@ -25,13 +23,9 @@ describe('ts.ec.net.ping', function () {
             event:   true
         });
 
-        session.agent.testcases = {
-            net: initializeNet({
-                root_uri:    config.server.id,
-                agent:       session.agent,
-                console_log: false
-            })
-        };
+        await initializeNet({
+            'agent': agent
+        });
 
         await testing.init({
             load:   [__dirname, '../../../session/session.json'],
@@ -39,30 +33,29 @@ describe('ts.ec.net.ping', function () {
                 //suite:    this.test.parent.titlePath().join('.'),
                 date:     util.localDate(),
                 operator: 'test@nicos-ag.com'
-            }
+            },
+            events: agent.event
         });
-
-        expect(testing.property('applicant')).toBe('example.org');
 
     }); // before('initialize session')
 
     after('exit', async function () {
         await testing.exit();
+        await agent.close();
     }); // after
 
     test('should successfully ping the applicant', async function () {
 
         const token = testing.token({
-            //test:      this.test.titlePath().join('.'),
-            //applicant: testing.property('applicant'),
             testCase: 'urn:ts:ec:net:tc:ping',
             param:    {
                 'host': testing.property('host')
             }
         });
+
         token.log("N DAS IST EIN TEST!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-        await session.agent.launchTestCase(token);
+        await agent.launchTestCase(token);
 
         expect(token.data).toMatchObject({
             validation: {

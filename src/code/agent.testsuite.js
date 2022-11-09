@@ -78,6 +78,11 @@ class TestsuiteAgent extends ServerAgent {
         return this;
     } // TestsuiteAgent#initialize
 
+    async close() {
+        this.#tbSocket.close();
+        if (this.server) await super.close();
+    }
+
     get id() {
         return this.uri;
     }
