@@ -22,6 +22,9 @@ module.exports = async function initializeNet(
         console_log: false
     }));
 
+    // TODO next approach:
+    // agent.addTestCases(EC_NAME, ec_net.testcases);
+
     // TODO connect the ecosystem
 
     ec_net.on('error', (error) => {

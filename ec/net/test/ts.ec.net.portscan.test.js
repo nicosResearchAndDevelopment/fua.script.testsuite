@@ -5,20 +5,18 @@ const
     util                            = require('../src/ts.ec.net.util.js'),
     config                          = require('../../../src/config/config.testsuite.js'),
     TestsuiteAgent                  = require('../../../src/code/agent.testsuite.js'),
-    initializeNet                   = require('../src/ts.ec.net.methods-factory.js');
+    initializeNet                   = require('../src/initialize.net.js');
 
 describe('ts.ec.net.portscan', function () {
 
     //this.timeout('10s');
     this.timeout(0);
 
-    let session = Object.create(null);
+    let agent = null;
 
     before('initialize session', async function () {
 
-        session.applicant = require('../../../session/ids/tb_ids_bob/config.json');
-
-        session.agent = await TestsuiteAgent.create({
+        agent = await TestsuiteAgent.create({
             context: config.space.context,
             store:   config.space.datastore,
             prefix:  'ts',
@@ -26,13 +24,9 @@ describe('ts.ec.net.portscan', function () {
             event:   true
         });
 
-        session.agent.testcases = {
-            net: initializeNet({
-                root_uri:    config.server.id,
-                agent:       session.agent,
-                console_log: false
-            })
-        };
+        await initializeNet({
+            'agent': agent
+        });
 
         await testing.init({
             load:   [__dirname, '../../../session/session.json'],
@@ -40,13 +34,15 @@ describe('ts.ec.net.portscan', function () {
                 //suite:    this.test.parent.titlePath().join('.'),
                 date:     util.localDate(),
                 operator: 'test@nicos-ag.com'
-            }
+            },
+            events: agent.event
         });
 
     }); // before('initialize session')
 
     after('exit', async function () {
         await testing.exit();
+        await agent.close();
     }); // after
 
     //test('should successfully make a portscan for the applicant', async function () {
@@ -85,7 +81,7 @@ describe('ts.ec.net.portscan', function () {
             //applicant: testing.property('applicant'),
             testCase: 'urn:ts:ec:net:tc:portscan',
             param:    {
-                host:  session.applicant.host,
+                host:  testing.property('host'),
                 ports: {
                     needed: {tcp: [80]}, // REM: TC claims to need those
                     //used:   undefined, // REM: applicant claims to use those
@@ -95,7 +91,7 @@ describe('ts.ec.net.portscan', function () {
             }
         });
 
-        await session.agent.launchTestCase(token);
+        await agent.launchTestCase(token);
 
         expect(token.data).toMatchObject({
             validation: {
