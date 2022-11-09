@@ -1,6 +1,8 @@
 const
-    util = require('../ts.ec.net.util.js'),
-    NAME = 'ping';
+    util      = require('../ts.ec.net.util.js'),
+    expect    = require('expect'),
+    NAME      = 'ping';
+const testing = require("@nrd/fua.module.testing");
 
 module.exports = function MethodFactory_ping(
     {
@@ -18,47 +20,41 @@ module.exports = function MethodFactory_ping(
         testCase                 = `${tc_root_uri}${NAME}/`,
         ErrorTestResultIsMissing = util.createErrorTestResultIsMissing({urn, uri});
 
-    async function ping(token, data) {
-        const result = {token, data, error: null};
+    /**
+     *
+     * @param {fua.module.testing.TestToken} token
+     * @returns {Promise<void>}
+     */
+    async function ping(token) {
 
-        try {
+        token.log(`TESTSUITE : ${urn} : called`);
 
-            token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : called`);
+        token.data.ec      = ec;
+        token.data.command = NAME;
 
-            data.ec      = ec;
-            data.command = NAME;
+        await token.sync();
 
-            await agent.test(token, data);
+        //token.assign({mahl: "zeit"});
+        //token.data.mahl2 = "zeitig";
 
-            token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : before : validation`);
+        token.log(`TESTSUITE : ${urn} : before : validation`);
 
-            if (!data.testResult) throw new ErrorTestResultIsMissing();
+        // region validation
 
-            data.validationResult = {
-                id:        `${uri}validation/result/${util.uuid.v1()}`,
-                timestamp: util.utcDateTime(),
-                //value:     ((data.testResult.isAlive === true) ? util.PASS : util.FAIL),
-                criterion: {
-                    IS_ALIVE: criterion.IS_ALIVE({
-                        id:          `${uri}validation/criterion/IS_ALIVE/${util.uuid.v1()}`,
-                        prov:        ping.id,
-                        testCase:    testCase,
-                        description: 'SUT pinged',
-                        status:      ((data.testResult.isAlive === true) ? util.PASS : util.FAIL),
-                        timestamp:   util.utcDateTime()
-                    })
-                }
-            };
+        token.data.validation = {
+            result: {
+                timestamp: util.utcDateTime()
+            }
+        };
 
-        } catch (err) {
-            result.error = err;
-            util.logError(err);
-        } // try
+        expect(token.data.testResult.isAlive).toBe(true);
 
-        if (console_log) util.logObject(result);
+        token.state('IS_ALIVE', true);
 
-        token.thread.push(`${util.utcDateTime()} : TESTSUITE : ${urn} : before : return`);
-        return result;
+        // endregion validation
+
+        return {error: null};
+
     } // ping
 
     Object.defineProperties(ping, {
