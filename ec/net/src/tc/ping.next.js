@@ -47,7 +47,7 @@ testcase.method = async function (token) {
 // module.exports = new TestCase({
 //     '@id': 'urn:ts:ec:net:tc:ping',
 //     /** @param {fua.module.testing.TestToken} token */
-//     async testMethod(token) {
+//     async processor(token) {
 //         token.log(`started testcase ${testcase.urn}`);
 //
 //         token.assign({
