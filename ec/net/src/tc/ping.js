@@ -2,7 +2,6 @@ const
     util      = require('../ts.ec.net.util.js'),
     expect    = require('expect'),
     NAME      = 'ping';
-const testing = require("@nrd/fua.module.testing");
 
 module.exports = function MethodFactory_ping(
     {
