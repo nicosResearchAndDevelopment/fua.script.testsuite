@@ -1,35 +1,36 @@
 const
     {describe, test, before, after} = require('mocha'),
     expect                          = require('expect'),
+    util                            = require('../src/ts.ec.net.util.js'),
     testing                         = require('@nrd/fua.module.testing'),
-    util                            = require('../src/ts.ec.net.util.js');
+    TestsuiteAgent                  = require('../../../src/code/agent.testsuite.next.js');
 
 describe('ts.ec.net.ping', function () {
 
     this.timeout('10s');
 
-    /** @type {fua.module.testing.TestingConsumer} */
     let agent = null;
 
     before('init', async function () {
-        agent = await testing.Consumer.from({
-            connectType:    'http',
-            connectOptions: {
+        agent = await TestsuiteAgent.create({
+            connect: {
+                type:               'http',
                 url:                'https://testbed.nicos-rd.com:8080/testing',
                 rejectUnauthorized: false
-            }
-        }).init({
-            session:    [__dirname, '../../../session/session.json'],
-            properties: {
-                //suite:    this.test.parent.titlePath().join('.'),
-                date:     util.localDate(),
-                operator: 'test@nicos-ag.com'
+            },
+            session: {
+                file:       [__dirname, '../../../session/session.json'],
+                properties: {
+                    //suite:    this.test.parent.titlePath().join('.'),
+                    date:     util.localDate(),
+                    operator: 'test@nicos-ag.com'
+                }
             }
         });
     }); // before('init')
 
     after('exit', async function () {
-        await agent.exit();
+        await agent.close();
     }); // after
 
     test('urn:tb:ec:net:tc:reachable', async function () {
@@ -37,7 +38,7 @@ describe('ts.ec.net.ping', function () {
             ecosystem: 'urn:tb:ec:net',
             testCase:  'urn:tb:ec:net:tc:reachable',
             param:     {
-                host: agent.property('host')
+                host: agent.testing.property('host')
             }
         });
         console.log(token.serialize());
