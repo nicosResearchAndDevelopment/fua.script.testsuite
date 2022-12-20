@@ -32,6 +32,12 @@ ids3cm:CheckListAnswer
     a owl:Class ;
 .
 
+ids3cm:answer
+    a           owl:ObjectProperty ;
+    rdfs:domain ids3cm:CheckListAnswerSheet ;
+    rdfs:range  ids3cm:CheckListAnswer ;
+.
+
 ids3cm:question
     a           owl:ObjectProperty ;
     rdfs:domain [ rdf:type    owl:Class ;

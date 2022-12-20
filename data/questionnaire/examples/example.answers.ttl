@@ -22,7 +22,13 @@
 # IDEA create own model for questionnaire and answer sheet and wrap ids-questionnaire for the webapp
 
 ex:answers
-    a ids3cm:CheckListAnswerSheet ;
+    a             ids3cm:CheckListAnswerSheet ;
+    ids3cm:answer ex:q_CR_7_4-5 ;
+    ids3cm:answer ex:q_AUD_01-1 ;
+    ids3cm:answer ex:q_COM_02-1 ;
+    ids3cm:answer ex:q_INF_01-2 ;
+    ids3cm:answer ex:q_CR_7_7-2 ;
+    ids3cm:answer ex:q_CR_7_6-2 ;
     # ...
 .
 
@@ -86,4 +92,11 @@ ex:q_CR_7_7-2
                        ids3cm:matrixAnswer [ a                   ids3cm:MatrixAnswer ;
                                              ids3cm:matrixColumn ids3c-co:q_CR_7_7-2-protocol ;
                                              ids3cm:textValue    "https" ; ] ; ] ;
+.
+
+ex:q_CR_7_6-2
+    # answer for CheckListQuestion_MATRIX
+    a               ids3cm:CheckListAnswer ;
+    ids3cm:question ids3c-co:q_CR_7_6-2 ;
+    ids3cm:skipped  false ;
 .
