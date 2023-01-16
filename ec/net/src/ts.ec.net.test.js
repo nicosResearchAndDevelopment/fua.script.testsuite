@@ -1,17 +1,18 @@
 const
     {describe, test, before, after} = require('mocha'),
     expect                          = require('expect'),
-    util                            = require('../src/ts.ec.net.util.js'),
-    testing                         = require('@nrd/fua.module.testing'),
+    util                            = require('@nrd/fua.core.util'),
+    // testing                         = require('@nrd/fua.module.testing'),
     TestsuiteAgent                  = require('../../../src/code/agent.testsuite.next.js');
 
-describe('ts.ec.net.ping', function () {
+describe('urn:ts:ec:net', function () {
 
     this.timeout('10s');
 
     let agent = null;
 
     before('init', async function () {
+        // TODO move initialization to a central location and generalize it
         agent = await TestsuiteAgent.create({
             connect: {
                 type:               'http',
@@ -27,11 +28,23 @@ describe('ts.ec.net.ping', function () {
                 }
             }
         });
-    }); // before('init')
+    });
 
     after('exit', async function () {
         await agent.close();
-    }); // after
+    });
+
+    test('urn:tb:ec:net:tm:ping', async function () {
+        const token = await agent.test({
+            ecosystem:  'urn:tb:ec:net',
+            testMethod: 'urn:tb:ec:net:tm:ping',
+            param:      {
+                host: agent.testing.property('host')
+            }
+        });
+        console.log(token.serialize());
+        expect(token.result.isAlive).toBe(true);
+    });
 
     test('urn:tb:ec:net:tc:reachable', async function () {
         const token = await agent.test({
