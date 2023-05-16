@@ -3,7 +3,8 @@ const
     expect                          = require('expect'),
     util                            = require('@nrd/fua.core.util'),
     // testing                         = require('@nrd/fua.module.testing'),
-    TestsuiteAgent                  = require('../../../src/code/agent.testsuite.next.js');
+    TestsuiteAgent                  = require('../../../src/code/agent.testsuite.next.js'),
+    basicAuth                       = (user, password) => 'Basic ' + Buffer.from(user + ':' + password).toString('base64');
 
 describe('urn:ts:ec:net', function () {
 
@@ -17,6 +18,9 @@ describe('urn:ts:ec:net', function () {
             connect: {
                 type:               'http',
                 url:                'https://testbed.nicos-rd.com:8080/testing',
+                headers:            {
+                    'Authorization': basicAuth('testsuite', 'testsuite')
+                },
                 rejectUnauthorized: false
             },
             session: {
