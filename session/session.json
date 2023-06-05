@@ -1,9 +1,9 @@
 {
   "@type": "TestSession",
-  "@id": "dbb27d60-5abd-11ed-a211-050004416f41",
-  "dct:created": "2022-11-02T14:51:39.958Z",
+  "@id": "0dea4820-03ac-11ee-8560-a50ca7ce861a",
+  "dct:created": "2023-06-05T14:19:59.777Z",
   "properties": {
-    "applicant": "example.org",
-    "host": "127.0.0.1"
+    "applicant": "bob.tb.nicos-rd.com",
+    "host": "bob.tb.nicos-rd.com"
   }
 }

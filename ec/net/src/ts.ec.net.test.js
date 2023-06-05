@@ -16,8 +16,9 @@ describe('urn:ts:ec:net', function () {
         // TODO move initialization to a central location and generalize it
         agent = await TestsuiteAgent.create({
             connect: {
-                type:               'http',
-                url:                'https://testbed.nicos-rd.com:8080/testing',
+                type: 'http',
+                // url: 'https://localhost:8080/testing',
+                url:                'https://tb.nicos-rd.com/testing',
                 headers:            {
                     'Authorization': basicAuth('testsuite', 'testsuite')
                 },
