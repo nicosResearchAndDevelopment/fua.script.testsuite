@@ -3,7 +3,8 @@
   "@id": "0dea4820-03ac-11ee-8560-a50ca7ce861a",
   "dct:created": "2023-06-05T14:19:59.777Z",
   "properties": {
-    "applicant": "bob.tb.nicos-rd.com",
-    "host": "bob.tb.nicos-rd.com"
+    "applicant": "https://bob.tb.nicos-rd.com/",
+    "host": "bob.tb.nicos-rd.com",
+    "ski_aki": "84:D5:D1:96:30:96:DD:68:5C:CA:1E:C1:79:CD:1B:F8:55:85:58:B8:keyid:07:E8:AA:9F:59:23:93:EE:0D:26:0F:29:3B:53:2D:0B:98:11:46:8F"
   }
 }
