@@ -33,8 +33,8 @@ describe('ts.ec.dev', function () {
 
         expect(token.result.datetime).toBeTruthy();
         console.log(`datetime: ${dateToString(startDate)} [${timeToString(-timeBefore)}] < ${dateToString(tokenDate)} < [${timeToString(timeAfter)}] ${dateToString(endDate)}`);
-        expect(timeBefore).toBeGreaterThan(-tolerance);
-        expect(timeAfter).toBeGreaterThan(-tolerance);
+        expect(-timeBefore).toBeLessThan(tolerance);
+        expect(-timeAfter).toBeLessThan(tolerance);
     });
 
 });
