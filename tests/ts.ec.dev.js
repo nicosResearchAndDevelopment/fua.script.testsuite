@@ -1,6 +1,7 @@
 const
     {describe, test} = require('mocha'),
-    expect           = require('expect');
+    expect           = require('expect'),
+    util             = require('@nrd/fua.core.util');
 
 describe('ts.ec.dev', function () {
 
@@ -26,6 +27,7 @@ describe('ts.ec.dev', function () {
             tokenDate      = new Date(token.result.datetime),
             timeBefore     = tokenDate.getTime() - startDate.getTime(),
             timeAfter      = endDate.getTime() - tokenDate.getTime(),
+            timeBetween    = endDate.getTime() - startDate.getTime(),
             dateToString   = (date) => date.getHours().toString().padStart(2, '0') + ':'
                 + date.getMinutes().toString().padStart(2, '0') + ':'
                 + date.getSeconds().toString().padStart(2, '0') + '.'
@@ -37,14 +39,16 @@ describe('ts.ec.dev', function () {
                     Math.floor(Math.abs(time) / 1000) % 60,
                     Math.abs(time) % 1000
                 )).replace(/00:/g, '').replace(/^0+(?=\d)/, ''),
-            tolerance      = 500,
-            toleratedStart = new Date(startDate.getTime() - tolerance),
-            toleratedEnd   = new Date(endDate.getTime() + tolerance);
+            maxShift       = 500,
+            maxDelay       = 1000,
+            toleratedStart = new Date(startDate.getTime() - maxShift),
+            toleratedEnd   = new Date(endDate.getTime() + maxShift);
 
         expect(token.result.datetime).toBeTruthy();
         console.log(`datetime: ${dateToString(startDate)} < [${timeToString(timeBefore)}] ${dateToString(tokenDate)} < [${timeToString(timeAfter)}] ${dateToString(endDate)}`);
         expect(tokenDate.getTime()).toBeGreaterThan(toleratedStart.getTime());
         expect(tokenDate.getTime()).toBeLessThan(toleratedEnd.getTime());
+        expect(timeBetween).toBeLessThan(maxDelay);
     });
 
 });
