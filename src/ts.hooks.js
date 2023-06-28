@@ -4,7 +4,8 @@ const
     testing   = require('@nrd/fua.module.testing'),
     util      = require('./ts.util.js'),
     config    = require('./ts.config.js'),
-    Testsuite = require('./ts.agent.js');
+    Testsuite = require('./ts.agent.js'),
+    expect    = require('./ts.expect.js');
 
 fixtures.mochaGlobalSetup = async function () {
     util.assert(util.isString(config.connect.type), 'expected config.connect.type to be a string');
@@ -27,7 +28,8 @@ fixtures.mochaGlobalTeardown = async function () {
 };
 
 hooks.beforeAll = async function () {
-    this.ts = this.testsuite = new Testsuite(fixtures.testingConsumer);
+    this.ts     = new Testsuite(fixtures.testingConsumer);
+    this.expect = expect;
 };
 
 // hooks.afterAll = async function () {};

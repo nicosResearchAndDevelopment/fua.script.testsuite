@@ -11,7 +11,7 @@ describe('ts.ec.ids', function () {
     const context = Object.create(null);
 
     before(async function () {
-        context.rcClient = SocketIOClient.io(this.ts.property('url'));
+        context.rcClient = SocketIOClient.io(this.ts.prop('url'));
         await new Promise((resolve, reject) => context.rcClient.on('connect', resolve).on('connect_error', reject));
         context.refreshDat = () => new Promise((resolve, reject) => {
             const callback = (err, result) => err ? reject(util.errorFromJSON(err)) : resolve(result);
@@ -31,7 +31,7 @@ describe('ts.ec.ids', function () {
                     ecosystem:  'urn:tb:ec:ids',
                     testMethod: 'urn:tb:ec:ids:tm:DAPSInteraction:captureDAT',
                     param:      {
-                        sub: this.ts.property('ski_aki')
+                        sub: this.ts.prop('ski_aki')
                     }
                 }),
                 util.pause('500ms').then(context.refreshDat)
@@ -48,7 +48,7 @@ describe('ts.ec.ids', function () {
                     testCase:  'urn:tb:ec:ids:tc:DAPSInteraction:ReceiveDATfromDAPS',
                     param:     {
                         connector: {
-                            clientId: this.ts.property('ski_aki')
+                            clientId: this.ts.prop('ski_aki')
                         }
                     }
                 }),

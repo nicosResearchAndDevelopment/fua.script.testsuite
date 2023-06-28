@@ -6,6 +6,15 @@ describe('ts.ec.dev', function () {
 
     this.timeout('10s');
 
+    test('expect', async function () {
+        expect(this.expect).toBe(expect);
+
+        expect(typeof expect.toBeTypeOf).toBe('function');
+        expect(() => expect('lorem').toBeTypeOf('string')).not.toThrow();
+        expect(() => expect('ipsum').toBeTypeOf('object')).toThrow();
+        expect(() => expect(null).not.toBeTypeOf('object')).toThrow();
+    });
+
     test('datetime', async function () {
         const
             startDate      = new Date(),
