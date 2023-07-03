@@ -15,7 +15,7 @@ describe('ts.ec.net', function () {
             }
         });
         console.log(token.serialize());
-        expect(token.result.isAlive).toBe(true);
+        expect(token).toHaveProperty('result.isAlive', true);
     });
 
     test('portscan', async function () {
@@ -27,7 +27,7 @@ describe('ts.ec.net', function () {
             }
         });
         console.log(token.serialize());
-        expect(token.result.entries).toBeTruthy();
+        expect(token).toHaveProperty('result.entries', expect.arrayContaining([]));
     });
 
     test('reachable', async function () {
@@ -39,7 +39,7 @@ describe('ts.ec.net', function () {
             }
         });
         console.log(token.serialize());
-        expect(token.validation.success).toBe(true);
+        expect(token).toHaveProperty('validation.success', true);
     });
 
 });

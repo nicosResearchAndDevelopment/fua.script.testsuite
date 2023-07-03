@@ -37,8 +37,8 @@ describe('ts.ec.ids', function () {
                 util.pause('500ms').then(context.refreshDat)
             ]);
             console.log(token.serialize());
-            expect(token.result.token).toBeTruthy();
-            expect(token.result.payload.sub).toBe(token.param.sub);
+            expect(token).toHaveProperty('result.token');
+            expect(token).toHaveProperty('result.payload.sub', token.param.sub);
         });
 
         test('ReceiveDATfromDAPS', async function () {
@@ -55,7 +55,7 @@ describe('ts.ec.ids', function () {
                 util.pause('500ms').then(context.refreshDat)
             ]);
             console.log(token.serialize());
-            expect(token.validation.datReceived).toBe(true);
+            expect(token).toHaveProperty('validation.datReceived', true);
         });
 
     });

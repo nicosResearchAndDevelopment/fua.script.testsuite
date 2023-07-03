@@ -44,7 +44,7 @@ describe('ts.ec.dev', function () {
             toleratedStart = new Date(startDate.getTime() - maxShift),
             toleratedEnd   = new Date(endDate.getTime() + maxShift);
 
-        expect(token.result.datetime).toBeTruthy();
+        expect(token).toHaveProperty('result.datetime');
         console.log(`datetime: ${dateToString(startDate)} < [${timeToString(timeBefore)}] ${dateToString(tokenDate)} < [${timeToString(timeAfter)}] ${dateToString(endDate)}`);
         expect(tokenDate.getTime()).toBeGreaterThan(toleratedStart.getTime());
         expect(tokenDate.getTime()).toBeLessThan(toleratedEnd.getTime());
