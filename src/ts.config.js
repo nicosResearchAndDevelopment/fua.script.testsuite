@@ -18,7 +18,7 @@ config.connect = {
         )
     },
     agent:   new https.Agent({
-        rejectUnauthorized: !(args.insecure || env.INSECURE)
+        rejectUnauthorized: !(args.insecure || env.TESTING_INSECURE)
     })
 };
 

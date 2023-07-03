@@ -27,7 +27,7 @@ describe('ts.ec.net', function () {
             }
         });
         console.log(token.serialize());
-        expect(token).toHaveProperty('result.entries', expect.arrayContaining([]));
+        expect(token).toHaveProperty('result.entries', expect.any(Array));
     });
 
     test('reachable', async function () {
