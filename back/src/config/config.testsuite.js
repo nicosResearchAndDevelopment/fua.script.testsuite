@@ -2,7 +2,7 @@ const
     path                    = require('path'),
     fs                      = require('fs'),
     __root                  = path.join(__dirname, '../..'),
-    default_context         = require('@nrd/fua.resource.data/context'),
+    default_context         = require('@nrd/fua.resource.context'),
     server_tls_certificates = require('../../cert/tls-server/server.js');
 
 exports.context = {

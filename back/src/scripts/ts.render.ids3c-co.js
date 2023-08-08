@@ -4,7 +4,7 @@ const
     expect                 = require('expect'),
     __data                 = path.join(__dirname, '../../data'),
     util                   = require('../code/util.testsuite.js'),
-    context                = require('@nrd/fua.resource.data/context'),
+    context                = require('@nrd/fua.resource.context'),
     rdf                    = require('@nrd/fua.module.rdf'),
     {Dataset, DataFactory} = require('@nrd/fua.module.persistence'),
     FilesystemStore        = require('@nrd/fua.module.persistence.filesystem'),
