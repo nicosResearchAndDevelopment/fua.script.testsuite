@@ -119,7 +119,7 @@ exports.persistence = {
                 'dct:title':       'data.ttl',
                 'dct:alternative': 'Testsuite Data'
             },
-            // require('@nrd/fua.resource.ontology'),
+            require('@nrd/fua.resource.ontology.core'),
             require('@nrd/fua.resource.ontology.ids/ids3cm'),
             require('@nrd/fua.resource.ontology.ids/ids3c-co'),
             //
