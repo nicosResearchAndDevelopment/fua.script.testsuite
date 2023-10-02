@@ -3,9 +3,9 @@ const
     fs                   = require('fs/promises'),
     util                 = require('./code/util.testsuite.js'),
     express              = require('express'),
-    Middleware_LDP       = require('@nrd/fua.middleware.ldp'),
-    Middleware_WEB       = require('@nrd/fua.middleware.web'),
-    Middleware_WEB_login = require('@nrd/fua.middleware.web/login'),
+    Middleware_LDP       = require('@nrd/fua.service.ldp'),
+    Middleware_WEB       = require('@nrd/fua.service.ui'),
+    Middleware_WEB_login = require('@nrd/fua.service.ui/login'),
     rdf                  = require('@nrd/fua.module.rdf'),
     {Dataset}            = require('@nrd/fua.module.persistence')
 ; // const
