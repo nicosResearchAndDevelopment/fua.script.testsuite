@@ -1,8 +1,7 @@
 const
     interfaceName = 'http',
     util          = require('../util.testsuite.js'),
-    {URL}         = require('url'),
-    fetch         = require('node-fetch');
+    {URL}         = require('url');
 
 exports.interface = interfaceName;
 exports.generator = function ({baseUrl, httpMethod = 'POST', httpHeaders = {'Content-Type': 'application/json'}}) {
