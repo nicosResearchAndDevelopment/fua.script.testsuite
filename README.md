@@ -1,4 +1,4 @@
-# nrd-testsuite
+# @fua/script.testsuite
 
 ## Setup
 
