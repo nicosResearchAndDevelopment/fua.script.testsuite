@@ -1,7 +1,7 @@
 const
     {describe, test, before, after} = require('mocha'),
     expect                          = require('expect'),
-    testing                         = require('@nrd/fua.module.testing'),
+    testing                         = require('@fua/module.testing'),
     util                            = require('../src/ts.ec.net.util.js'),
     config                          = require('../../../src/config/config.testsuite.js'),
     TestsuiteAgent                  = require('../../../src/code/agent.testsuite.js'),

@@ -1,7 +1,7 @@
 const
     {describe, test} = require('mocha'),
     expect           = require('expect'),
-    util             = require('@nrd/fua.core.util');
+    util             = require('@fua/core.util');
 
 describe('ts.ec.dev', function () {
 

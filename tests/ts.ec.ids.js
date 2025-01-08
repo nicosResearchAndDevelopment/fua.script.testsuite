@@ -1,7 +1,7 @@
 const
     {describe, test, before, after} = require('mocha'),
     expect                          = require('expect'),
-    util                            = require('@nrd/fua.core.util'),
+    util                            = require('@fua/core.util'),
     SocketIOClient                  = require('socket.io-client');
 
 describe('ts.ec.ids', function () {

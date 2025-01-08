@@ -1,7 +1,7 @@
 const
     util        = require('./util.testsuite.js'),
-    ServerAgent = require('@nrd/fua.agent.server'),
-    testing     = require('@nrd/fua.module.testing');
+    ServerAgent = require('@fua/agent.server'),
+    testing     = require('@fua/module.testing');
 
 class TestsuiteAgent extends ServerAgent {
 

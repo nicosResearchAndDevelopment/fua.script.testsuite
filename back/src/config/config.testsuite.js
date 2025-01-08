@@ -2,7 +2,7 @@ const
     path                    = require('path'),
     fs                      = require('fs'),
     __root                  = path.join(__dirname, '../..'),
-    default_context         = require('@nrd/fua.resource.context'),
+    default_context         = require('@fua/resource.context'),
     server_tls_certificates = require('../../cert/tls-server/server.js');
 
 exports.context = {
@@ -108,7 +108,7 @@ exports.rdf = {
 };
 
 exports.persistence = {
-    module:  '@nrd/fua.module.persistence.filesystem',
+    module:  '@fua/module.persistence.filesystem',
     options: {
         defaultFile: 'file://ts.data.ttl',
         loadFiles:   [
@@ -119,9 +119,9 @@ exports.persistence = {
                 'dct:title':       'data.ttl',
                 'dct:alternative': 'Testsuite Data'
             },
-            require('@nrd/fua.resource.ontology.core'),
-            require('@nrd/fua.resource.ontology.ids/ids3cm'),
-            require('@nrd/fua.resource.ontology.ids/ids3c-co'),
+            require('@fua/resource.ontology.core'),
+            require('@fua/resource.ontology.ids/ids3cm'),
+            require('@fua/resource.ontology.ids/ids3c-co'),
             //
             // {'dct:identifier': path.join(__root, 'data/model/tsm.ttl'), 'dct:format': 'text/turtle'},
             {'dct:identifier': path.join(__root, 'data/ts.ttl'), 'dct:format': 'text/turtle'}

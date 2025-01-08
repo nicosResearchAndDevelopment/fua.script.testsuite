@@ -1,25 +1,27 @@
 {
-  "name": "@nrd/fua.app.testsuite",
-  "version": "1.0.0",
+  "name": "@fua/script.testsuite",
+  "version": "0.0.0-dev",
   "description": "",
   "dependencies": {
-    "@nrd/fua.core.util": "^1.0.0",
-    "@nrd/fua.module.testing": "^1.0.0",
-    "@nrd/fua.module.subprocess": "^1.0.0",
-    "mocha": "^8.2.1",
-    "expect": "^26.6.2"
+    "@fua/core.util": "^1.0.0",
+    "@fua/module.testing": "^1.0.0",
+    "@fua/module.subprocess": "^1.0.0",
+    "expect": "26.x",
+    "mocha": "10.x"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "mocha": {
-    "require": "./src/ts.hooks.js"
+    "require": "./src/ts.hooks.js",
+    "bail": false,
+    "recursive": false,
+    "spec": "tests/*.js"
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@git02.int.nsc.ag:10022/research/fua/app/testbed.git"
+    "url": "ssh://git@github.com:nicosResearchAndDevelopment/fua.script.testsuite.git"
   },
-  "keywords": [],
-  "author": "spetrac@nicos-ag.com",
-  "license": "UNLICENSED"
+  "author": "Simon Petrac <pfoerdie@gmail.com>",
+  "license": "MIT"
 }

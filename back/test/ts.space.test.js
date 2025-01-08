@@ -3,7 +3,7 @@ const
     expect                          = require('expect'),
     config                          = require('../src/config/config.testsuite.js'),
     TestsuiteAgent                  = require('../src/code/agent.testsuite.js'),
-    {Space}                         = require('@nrd/fua.module.space');
+    {Space}                         = require('@fua/module.space');
 
 describe('ts.space', function () {
 

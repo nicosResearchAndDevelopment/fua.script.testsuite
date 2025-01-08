@@ -3,11 +3,11 @@ const
     fs                   = require('fs/promises'),
     util                 = require('./code/util.testsuite.js'),
     express              = require('express'),
-    Middleware_LDP       = require('@nrd/fua.service.ldp'),
-    Middleware_WEB       = require('@nrd/fua.service.ui'),
-    Middleware_WEB_login = require('@nrd/fua.service.ui/login'),
-    rdf                  = require('@nrd/fua.module.rdf'),
-    {Dataset}            = require('@nrd/fua.module.persistence')
+    Middleware_LDP       = require('@fua/service.ldp'),
+    Middleware_WEB       = require('@fua/service.ui'),
+    Middleware_WEB_login = require('@fua/service.ui/login'),
+    rdf                  = require('@fua/module.rdf'),
+    {Dataset}            = require('@fua/module.persistence')
 ; // const
 
 module.exports = async function TestsuiteApp(

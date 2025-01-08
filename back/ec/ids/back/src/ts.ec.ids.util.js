@@ -1,7 +1,7 @@
 const
     path  = require('path'),
-    _util = require('@nrd/fua.core.util'),
-    _uuid = require('@nrd/fua.core.uuid'),
+    _util = require('@fua/core.util'),
+    _uuid = require('@fua/core.uuid'),
     util  = exports = module.exports = {
         ..._util,
         assert: _util.Assert('ts.ec.ids')

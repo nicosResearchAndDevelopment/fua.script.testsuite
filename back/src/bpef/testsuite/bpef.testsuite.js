@@ -1,4 +1,4 @@
-const util = require("@nrd/fua.core.util");
+const util = require("@fua/core.util");
 
 module.exports = ({
                       root:    root,

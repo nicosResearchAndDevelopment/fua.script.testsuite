@@ -1,5 +1,5 @@
 const
-    {TestingConsumer} = require('@nrd/fua.module.testing'),
+    {TestingConsumer} = require('@fua/module.testing'),
     util              = require('./ts.util.js');
 
 function Testsuite(testingConsumer) {

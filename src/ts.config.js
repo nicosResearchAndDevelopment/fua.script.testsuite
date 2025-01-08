@@ -2,7 +2,7 @@ const
     config     = exports,
     util       = require('./ts.util.js'),
     https      = require('https'),
-    subprocess = require('@nrd/fua.module.subprocess'),
+    subprocess = require('@fua/module.subprocess'),
     args       = subprocess.parseArgv(),
     env        = process.env;
 

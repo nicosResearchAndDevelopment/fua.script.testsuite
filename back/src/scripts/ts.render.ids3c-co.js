@@ -4,11 +4,11 @@ const
     expect                 = require('expect'),
     __data                 = path.join(__dirname, '../../data'),
     util                   = require('../code/util.testsuite.js'),
-    context                = require('@nrd/fua.resource.context'),
-    rdf                    = require('@nrd/fua.module.rdf'),
-    {Dataset, DataFactory} = require('@nrd/fua.module.persistence'),
-    FilesystemStore        = require('@nrd/fua.module.persistence.filesystem'),
-    {Space}                = require('@nrd/fua.module.space'),
+    context                = require('@fua/resource.context'),
+    rdf                    = require('@fua/module.rdf'),
+    {Dataset, DataFactory} = require('@fua/module.persistence'),
+    FilesystemStore        = require('@fua/module.persistence.filesystem'),
+    {Space}                = require('@fua/module.space'),
     REPLACE                = false;
 
 (async function Main() {
@@ -30,8 +30,8 @@ const
                     'dct:title':       'model.form.ttl',
                     'dct:alternative': 'Form Ontology'
                 },
-                require('@nrd/fua.resource.ontology.ids/ids3cm'),
-                require('@nrd/fua.resource.ontology.ids/ids3c-co')
+                require('@fua/resource.ontology.ids/ids3cm'),
+                require('@fua/resource.ontology.ids/ids3c-co')
             ]
         }, new DataFactory({
             ...context,

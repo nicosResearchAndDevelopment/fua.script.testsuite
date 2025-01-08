@@ -1,8 +1,8 @@
 const
     path             = require('path'),
     util             = require('./util.testsuite.js'),
-    ServerAgent      = require('@nrd/fua.agent.server'),
-    testing_model    = require('@nrd/fua.module.testing/model'),
+    ServerAgent      = require('@fua/agent.server'),
+    testing_model    = require('@fua/module.testing/model'),
     socket_io_client = require('socket.io-client');
 
 class TestsuiteAgent extends ServerAgent {

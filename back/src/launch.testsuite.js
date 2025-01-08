@@ -1,7 +1,7 @@
 const
     config         = require('./config/config.testsuite.js'),
     util           = require('./code/util.testsuite.js'),
-    BasicAuth      = require('@nrd/fua.agent.amec/BasicAuth'),
+    BasicAuth      = require('@fua/agent.amec/BasicAuth'),
     TestsuiteAgent = require('./code/agent.testsuite.js'),
     TestsuiteApp   = require('./app.testsuite.js'),
     TestsuiteLab   = require('./lab.testsuite.js'),

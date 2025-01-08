@@ -1,8 +1,8 @@
 const
     {describe, test, before, after} = require('mocha'),
     expect                          = require('expect'),
-    util                            = require('@nrd/fua.core.util'),
-    // testing                         = require('@nrd/fua.module.testing'),
+    util                            = require('@fua/core.util'),
+    // testing                         = require('@fua/module.testing'),
     TestsuiteAgent                  = require('../../../src/code/agent.testsuite.next.js'),
     basicAuth                       = (user, password) => 'Basic ' + Buffer.from(user + ':' + password).toString('base64');
 

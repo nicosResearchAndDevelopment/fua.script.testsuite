@@ -1,7 +1,7 @@
 const
     fixtures  = exports,
     hooks     = fixtures.mochaHooks = {},
-    testing   = require('@nrd/fua.module.testing'),
+    testing   = require('@fua/module.testing'),
     util      = require('./ts.util.js'),
     config    = require('./ts.config.js'),
     Testsuite = require('./ts.agent.js'),
